@@ -1,5 +1,6 @@
 # About:
 In the process of replicating results from "Impact of the Choice of Normalization Method on Molecular Cancer Class Discovery Using Nonnegative Matrix Factorization" using python instead of MatLab. The NMF script thus far uses the maximum normalisation method with the embedded filter as this showed the best performance.
+
 The core Leukemia and Medulloblastoma datasets have been tested for the "mean of clustering accuracies from a 100 runs of NMF together with the standard error of the mean" so far. However the results vary slightly from the original papers results and I am not sure why?
 
 ## Results Table:
