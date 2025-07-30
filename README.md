@@ -3,6 +3,10 @@ In the process of replicating results from "Impact of the Choice of Normalizatio
 
 The core Leukemia and Medulloblastoma datasets have been tested for the "mean of clustering accuracies from a 100 runs of NMF together with the standard error of the mean" so far. However the results vary slightly from the original papers results and I am not sure why?
 
+NMF.py - Contains code to run the model
+accuracy.py - References the accuracy metric being used (Hungarian algorithm) - similar to bestMap from MatLab??
+learning_script.py - Comments out the embedded filter and max norm method
+
 ## Results Table:
 | Datasets           | Max Norm (Yang et al.) | Max Norm (Python/Rowan) |
 |--------------------|------------------------|--------------------------|
