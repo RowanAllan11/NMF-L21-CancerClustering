@@ -1,0 +1,34 @@
+1	Brain_MD_12	Medulloblastoma
+2	Brain_MD_61	Medulloblastoma
+3	Brain_MD_15	Medulloblastoma
+4	Brain_MD_57	Medulloblastoma
+5	Brain_MD_33	Medulloblastoma
+6	Brain_MD_64	Medulloblastoma
+7	Brain_MD_17	Medulloblastoma
+8	Brain_MD_62	Medulloblastoma
+9	Brain_MD_63	Medulloblastoma
+10	Brain_MD_32	Medulloblastoma
+11	Brain_MGlio_1	Malignant Glioma
+12	Brain_MGlio_2	Malignant Glioma
+13	Brain_MGlio_3	Malignant Glioma
+14	Brain_MGlio_4	Malignant Glioma
+15	Brain_MGlio_5	Malignant Glioma
+16	Brain_MGlio_6	Malignant Glioma
+17	Brain_MGlio_7	Malignant Glioma
+18	Brain_MGlio_8	Malignant Glioma
+19	Brain_MGlio_9	Malignant Glioma
+20	Brain_MGlio_10	Malignant Glioma
+21	Brain_Rhab_1	AT/RT (Brain)
+22	Brain_Rhab_2	AT/RT (Renal)
+23	Brain_Rhab_3	AT/RT (Renal)
+24	Brain_Rhab_4	AT/RT (Brain)
+25	Brain_Rhab_5	AT/RT (Extra Renal)
+26	Brain_Rhab_6	AT/RT (Extra Renal)
+27	Brain_Rhab_7	AT/RT (Renal)
+28	Brain_Rhab_8	AT/RT (Brain)
+29	Brain_Rhab_9	AT/RT (Brain)
+30	Brain_Rhab_10	AT/RT (Brain)
+31	Brain_Ncer_1	Normal cerebellum
+32	Brain_Ncer_2	Normal cerebellum
+33	Brain_Ncer_3	Normal cerebellum
+34	Brain_Ncer_4	Normal cerebellum
