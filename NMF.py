@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import NMF
-from accuracy import cluster_acc
-from NMF_max1 import max_norm
+from utils import cluster_acc
+from utils import max_norm
 
 # Base structure for algorithm 1 which includes an embedded filter with a default T=0.5 and cluster assignment using re-weighting of the
 # H matrix. The algorithm involves two NMF steps using the desired normalisation technique.
@@ -59,7 +59,63 @@ class NMF_Max(BaseNMF):
 
         return W, H
 
-#Function to run a 100-iteration accuracy loop of the algorithm with the specified model.    
+class NMF_L21(BaseNMF):
+    def NMF_1(self, A):
+        rng = np.random.RandomState(self.seed) # Random number generator
+        g, n = A.shape
+        k = self.n_components
+
+        W = rng.rand(g, k)
+        H = rng.rand(k, n)
+
+        tol = 1e-5
+
+        for step in range(self.n_iter):
+            D = np.diag(1 / np.sqrt(np.sum(np.square(A - W.dot(H)), axis=0)))
+
+            Wu = W * (A.dot(D).dot(H.T))/(W.dot(H).dot(D).dot(H.T)+1e-10)
+            Hu = H * (Wu.T.dot(A).dot(D))/(Wu.T.dot(Wu).dot(H).dot(D)+1e-10)
+
+            e_W = np.sqrt(np.sum((Wu-W)**2, axis=(0,1)))/W.size
+            e_H = np.sqrt(np.sum((Hu-H)**2, axis=(0,1)))/H.size
+
+            if e_W<tol and e_H<tol:
+                print("step is:", step)
+                break
+
+            W = Wu
+            H = Hu
+
+        return W, H
+    
+    def NMF_2(self, A1):
+        rng = np.random.RandomState(self.seed)
+        g, n = A1.shape
+        k = self.n_components
+
+        W = rng.rand(g, k)
+        H = rng.rand(k, n)
+
+        tol = 1e-5
+
+        for step in range(self.n_iter):
+            D = np.diag(1 / np.sqrt(np.sum((A1 - W @ H) ** 2, axis=0) + 1e-10))
+
+            Wu = W * (A1 @ D @ H.T) / (W @ H @ D @ H.T + 1e-10)
+            Hu = H * (Wu.T @ A1 @ D) / (Wu.T @ Wu @ H @ D + 1e-10)
+
+            e_W = np.linalg.norm(Wu - W) / W.size
+            e_H = np.linalg.norm(Hu - H) / H.size
+
+            if e_W < tol and e_H < tol:
+                print("NMF_2 converged at step:", step)
+                break
+
+            W, H = Wu, Hu
+
+        return W, H
+
+# Function to run a 100-iteration accuracy loop of the algorithm with the specified model.    
 def run_model(model_class, A, labels, n_components, n_iter, n_runs, seed):
     accuracies = []
 
@@ -81,9 +137,17 @@ def run_model(model_class, A, labels, n_components, n_iter, n_runs, seed):
 
 if __name__ == '__main__':
     # Load your data and labels here
-    labels = np.load("Datasets/LK/LK(K=2).npy")
-    df = pd.read_csv("datasets/LK/LK.txt", header=0, sep="\t")
+    labels = np.load("datasets/Medullo/Medullo(K=2).npy")
+    df = pd.read_csv("datasets/Medullo/Medullo.txt", header=0, sep="\t")
     A = df.values   
     
-    #Run the NMF_Max (scikit-learn) model
-    run_model(NMF_Max, A, labels, n_components=2, n_iter=500, n_runs=100, seed=50)
+    # Uniform noise 
+    mu = 0.05
+    lamda = mu * np.max(A)
+    A_noisy = A + lamda * np.random.rand(*A.shape)
+
+    # Run the NMF_Max (scikit-learn) model
+    run_model(NMF_Max, A_noisy, labels, n_components=2, n_iter=500, n_runs=100, seed=50)
+
+    # Run the NMF_L21 model
+    run_model(NMF_L21, A_noisy, labels, n_components=2, n_iter=500, n_runs=100, seed=50)

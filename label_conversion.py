@@ -117,15 +117,27 @@ def assign_labels(all, subtype):
    np.save("Datasets/GSE35896/adeno(K=2)", labels)
    return print(labels.shape)
 
-samples_remove = ['ID_REF', 'GSM110391', 'GSM110439', 'GSM110442', 'GSM110443', 'GSM110447', 'GSM110448', 'GSM110450', 'GSM110452', 'GSM110453']
-df = pd.read_csv("datasets/GSE4913/series.txt", header=0, sep="\t")
+
+
+
+def create_array():
+    arr = [0] * 10 + [1] * 10 + [2] * 10 + [3] * 4
+
+    list = np.array(arr, dtype=int)
+
+    np.save("Datasets/CNS/CNS(K=2)", list)
+    return print(list)
+
+df = pd.read_csv("datasets/CNS/A.txt", sep="\t", header=None)
+df = df.iloc[1:, 2:]
+df = df.iloc[:, :-8]  
 df = df.dropna()
-df = df.drop(columns=samples_remove)
-#df = df.drop(index=0)
-df = df.reset_index(drop=True)
-df = df + 10
-df.columns = range(df.shape[1]) 
-np.save("Datasets/GSE4913/GSE4913", df)
+df = df.apply(pd.to_numeric)
+df = df.clip(lower=0)
+df.to_csv("datasets/CNS/df.txt", sep="\t", index=False, header=0)
+
+
+print(df.shape)
 print(df.head())
 
-
+create_array()
