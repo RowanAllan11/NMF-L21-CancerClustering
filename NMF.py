@@ -145,8 +145,8 @@ def run_model(model_class, A, labels, n_components, n_iter, n_runs, seed):
 if __name__ == '__main__':
     
     # Load data and labels.
-    labels = np.load("datasets/Medullo/Medullo(K=2).npy")
-    df = pd.read_csv("datasets/Medullo/Medullo.txt", header=0, sep="\t")
+    labels = np.load("datasets/CNS/CNS(K=2).npy")
+    df = pd.read_csv("datasets/CNS/CNS.txt", header=0, sep="\t")
     A = df.values   
     
     # Uniform noise.
@@ -161,5 +161,5 @@ if __name__ == '__main__':
     Run specified model with desired data, labels, number of componenets, iterations, runs and seed.
     """
 
-    run_model(NMF_Max, A_noisy, labels, n_components=2, n_iter=500, n_runs=100, seed=50)
-    run_model(NMF_L21, A_noisy, labels, n_components=2, n_iter=500, n_runs=100, seed=50)
+    run_model(NMF_Max, A, labels, n_components=4, n_iter=500, n_runs=100, seed=50)
+    run_model(NMF_L21, A, labels, n_components=4, n_iter=500, n_runs=100, seed=50)
