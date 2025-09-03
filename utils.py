@@ -1,19 +1,19 @@
-# Code from k-han util.py
-# https://github.com/scikit-learn/scikit-learn/blob/0.22.X/sklearn/utils/linear_assignment_.py
 
 import numpy as np
 from scipy.optimize import linear_sum_assignment
 
-
 """
-    Calculate clustering accuracy. Require scikit-learn installed
+Code from k-han util.py
+https://github.com/scikit-learn/scikit-learn/blob/0.22.X/sklearn/utils/linear_assignment_.py
 
-    # Arguments
+Calculate clustering accuracy. Requires scikit-learn installed.
+
+# Arguments
         y: true labels, numpy.array with shape `(n_samples,)`
         y_pred: predicted labels, numpy.array with shape `(n_samples,)`
 
-    # Return
-        accuracy, in [0,1]
+# Return
+    accuracy, in [0,1]
 """
 
 def cluster_acc(y_true, y_pred):

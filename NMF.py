@@ -4,8 +4,10 @@ from sklearn.decomposition import NMF
 from utils import cluster_acc
 from utils import max_norm
 
-# Base structure for algorithm 1 which includes an embedded filter with a default T=0.5 and cluster assignment using re-weighting of the
-# H matrix. The algorithm involves two NMF steps using the desired normalisation technique.
+"""
+Base structure for algorithm 1 which includes an embedded filter and cluster assignment using re-weighting of the
+H matrix. The algorithm involves two NMF steps using both L21 normalisation and max normalisation.
+"""
 
 class BaseNMF:
     def __init__(self, n_components, n_iter, seed):
@@ -18,8 +20,8 @@ class BaseNMF:
     def NMF_1(self, A):
         raise NotImplementedError("subclass must be implemented")
     
+    # Embedded filter, removes 50% of genes.
     def gene_filter(self, A):
-        # Embedded filter and maximum norm
         u = self.W.max(axis=1) - self.W.min(axis=1)
         threshold = np.quantile(u, 0.5)
         I = np.where(u >= threshold)[0]
@@ -41,6 +43,7 @@ class BaseNMF:
             cluster_assignment = self.cluster_assignment()
             return cluster_assignment
 
+# Scikit-learn NMF model paired with max norm function in "utils.py".
 class NMF_Max(BaseNMF):
     def NMF_1(self, A):
         Initialise = NMF(n_components=self.n_components, init="random", solver="mu", 
@@ -59,9 +62,12 @@ class NMF_Max(BaseNMF):
 
         return W, H
 
+# Custom L21 norm robust NMF model, code is adapted from alejandrods.
+# https://github.com/alejandrods/Analysis-of-the-robustness-of-NMF-algorithms/blob/master/algorithm/Analysis_of_the_robustness_of_NMF_algorithms.ipynb
+
 class NMF_L21(BaseNMF):
     def NMF_1(self, A):
-        rng = np.random.RandomState(self.seed) # Random number generator
+        rng = np.random.RandomState(self.seed)
         g, n = A.shape
         k = self.n_components
 
@@ -115,12 +121,13 @@ class NMF_L21(BaseNMF):
 
         return W, H
 
-# Function to run a 100-iteration accuracy loop of the algorithm with the specified model.    
+# Function for multiple run accuracy loop of the algorithm with the specified model.    
 def run_model(model_class, A, labels, n_components, n_iter, n_runs, seed):
     accuracies = []
 
     for i in range(n_runs):
-        # Create an instance of the specific class passed to the function
+        
+        # Creates an instance of the specific class passed to the function.
         model = model_class(n_components=n_components, n_iter=n_iter, seed=seed+101+i)
         
         cluster_assignment = model.fit(A)
@@ -136,18 +143,23 @@ def run_model(model_class, A, labels, n_components, n_iter, n_runs, seed):
     return mean_accuracy, standard_error
 
 if __name__ == '__main__':
-    # Load your data and labels here
+    
+    # Load data and labels.
     labels = np.load("datasets/Medullo/Medullo(K=2).npy")
     df = pd.read_csv("datasets/Medullo/Medullo.txt", header=0, sep="\t")
     A = df.values   
     
-    # Uniform noise 
+    # Uniform noise.
     mu = 0.05
     lamda = mu * np.max(A)
     A_noisy = A + lamda * np.random.rand(*A.shape)
 
-    # Run the NMF_Max (scikit-learn) model
-    run_model(NMF_Max, A_noisy, labels, n_components=2, n_iter=500, n_runs=100, seed=50)
+    """
+    A - without noise.
+    A_noisy - with noise.
 
-    # Run the NMF_L21 model
+    Run specified model with desired data, labels, number of componenets, iterations, runs and seed.
+    """
+
+    run_model(NMF_Max, A_noisy, labels, n_components=2, n_iter=500, n_runs=100, seed=50)
     run_model(NMF_L21, A_noisy, labels, n_components=2, n_iter=500, n_runs=100, seed=50)
